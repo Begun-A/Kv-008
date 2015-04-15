@@ -1,0 +1,2 @@
+def new(x):
+	return x
