@@ -1,3 +1,5 @@
 Deleted "Hello, world!"
-
+Hello, world!
 Two lines added.
+
+Some more text here.
