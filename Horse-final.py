@@ -1,5 +1,6 @@
 import openpyxl
 import time
+from collections import deque
 def howlong_script(f):
    def tmp(*args, **kwargs):
        t = time.time()
@@ -51,15 +52,11 @@ def bfs(matrix, start, finish):
     while (queue):
         # get the first path from the queue
         current_point = queue.pop(0)
-
         if current_point == finish:
             while current_point != start:
                 #x = current_point
                 final_path.append(current_point)
                 current_point = matrix[current_point[0]][current_point[1]]
-                #matrix[x[0]][x[1]] = "$"
-
-
             return final_path[::-1]
 
         for i in (adjacent_horse(matrix, current_point[0], current_point[1], finish)):
@@ -130,4 +127,7 @@ wb = openpyxl.load_workbook('kv008horse.xlsx')
 ws = wb.get_active_sheet()
 ws.cell('R2').value = round((time_ * 1000), 2)
 ws.cell('AP2').value = round((time_ * 1000 + time_all * 1000),2)
+
+#print (time_ * 1000)
+#print (time_ * 1000 + time_all * 1000)
 wb.save('kv008horse.xlsx')
