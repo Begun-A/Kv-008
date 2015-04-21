@@ -6,11 +6,10 @@ from models import app, db, Users, Tasks
 
 auth = HTTPBasicAuth()
 
+
 @auth.get_password
 def get_password(username):
-
     user = Users.query.filter_by(username=username).first()
-
     if user is None or user.username != 'miguel':
         return None
     return user.password
@@ -33,7 +32,6 @@ def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 
-
 def make_public_task(task):
     new_task = {}
     new_task['id'] = url_for('get_task', task_id=task.id, _external=True)
@@ -42,12 +40,13 @@ def make_public_task(task):
     new_task['done'] = task.done
     return new_task
 
+
 @app.route('/todo/api/v1.0/tasks', methods=['GET'])
 @auth.login_required
 def get_tasks():
 
     return jsonify({'tasks':
-                        [make_public_task(task) for task in Tasks.query.all()]})
+                    [make_public_task(task) for task in Tasks.query.all()]})
 
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
@@ -57,7 +56,6 @@ def get_task(task_id):
     if task is None:
         abort(404)
     return jsonify({'task': make_public_task(task)})
-
 
 
 @app.route('/todo/api/v1.0/tasks', methods=['POST'])
@@ -72,7 +70,6 @@ def create_task():
     db.session.add(task)
     db.session.commit()
     return jsonify({'task': make_public_task(task)}), 201
-
 
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['PUT'])
@@ -98,6 +95,7 @@ def update_task(task_id):
     db.session.add(task)
     db.session.commit()
     return jsonify({'task': make_public_task(task)})
+
 
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['DELETE'])
 @auth.login_required
