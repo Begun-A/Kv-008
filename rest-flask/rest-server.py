@@ -44,7 +44,6 @@ def make_public_task(task):
 @app.route('/todo/api/v1.0/tasks', methods=['GET'])
 @auth.login_required
 def get_tasks():
-
     return jsonify({'tasks':
                     [make_public_task(task) for task in Tasks.query.all()]})
 
@@ -61,7 +60,6 @@ def get_task(task_id):
 @app.route('/todo/api/v1.0/tasks', methods=['POST'])
 @auth.login_required
 def create_task():
-
     if not request.json or 'title' not in request.json:
         abort(400)
     title = request.json['title']
@@ -100,7 +98,6 @@ def update_task(task_id):
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['DELETE'])
 @auth.login_required
 def delete_task(task_id):
-
     task = Tasks.query.get(task_id)
     if task is None:
         abort(404)
