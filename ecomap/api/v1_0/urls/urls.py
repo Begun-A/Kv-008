@@ -1,16 +1,18 @@
 # coding: utf-8
 import os
 import tornado
-from api.v1_0.handlers.user import OAuth2APIHandler, UserAPIHandler
-from api.v1_0.handlers.authentication import LoginHandler, FacebookLoginHandler
+from api.v1_0.handlers.user import UserAPIHandler
+from api.v1_0.handlers.auth import LoginHandler, FacebookLoginHandler
 from docs import DOCS_ROOT
 
 
-PublicUrls = [
-    (r'/api/v1/authorize/?', OAuth2APIHandler),
-    (r'/api/v1/user/?', UserAPIHandler),
+UserUrls = [
     (r'/auth/login', LoginHandler),
     (r'/auth/login/facebook', FacebookLoginHandler)
+]
+
+APIUrls = [
+    (r'/api/v1/user/?', UserAPIHandler)
 ]
 
 # third argument is passed to initialize() method of StaticFileHandler class
@@ -20,4 +22,4 @@ DocsUrls = [
     }),
 ]
 
-APIUrls = PublicUrls + DocsUrls
+UrlsTable = UserUrls + APIUrls + DocsUrls

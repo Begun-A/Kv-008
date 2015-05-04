@@ -1,8 +1,10 @@
 import tornado.web
 import tornado.auth
 
+from api.v1_0.handlers.base import BaseAPIHandler
 
-class LoginHandler(tornado.web.RequestHandler):
+
+class LoginHandler(BaseAPIHandler):
 
     def get(self):
         self.write("""\
@@ -29,7 +31,7 @@ class LoginHandler(tornado.web.RequestHandler):
             pass
 
 
-class FacebookLoginHandler(tornado.web.RequestHandler,
+class FacebookLoginHandler(BaseAPIHandler,
                            tornado.auth.FacebookGraphMixin):
     """This class implements Facebook authentication using the Graph API.
 
