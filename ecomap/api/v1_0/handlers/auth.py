@@ -136,14 +136,6 @@ class GoogleLoginHandler(BaseAPIHandler, tornado.auth.GoogleOAuth2Mixin):
                 response_type='code',
                 extra_params={'approval_prompt': 'auto'})
 
-    def _on_google_auth(self, user):
-        if not user:
-            self.clear_all_cookies()
-            raise tornado.web.HTTPError(500, 'Google authentication failed')
-        self.google_request(path='/me',
-                            access_token=user['access_token'],
-                            callback=self._save_user_profile)
-
     @tornado.auth._auth_return_future
     def google_request(self, path, callback, access_token=None,
                        post_args=None, **args):
