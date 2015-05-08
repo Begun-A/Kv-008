@@ -1,14 +1,10 @@
+import urllib as urllib_parse
 import functools
 import tornado.web
 import tornado.auth
 import tornado.escape
 
 from api.v1_0.handlers.base import BaseAPIHandler
-
-try:
-    import urllib.parse as urllib_parse  # py3
-except ImportError:
-    import urllib as urllib_parse  # py2
 
 
 class LoginHandler(BaseAPIHandler):
@@ -23,8 +19,8 @@ class LoginHandler(BaseAPIHandler):
         <input type="submit" value="Sign in"><br>
         </form>
         <p>Sign in with <a href="/auth/login/facebook">Facebook</a> or
-        <a href="#">Gmail</a></p>
-        <p><a href="#">Register</a></p>
+        <a href="/auth/login/google">Gmail</a></p>
+        <p><a href="/auth/register">Register</a></p>
         </body>
         </html>\
         """)
@@ -99,8 +95,6 @@ class FacebookLoginHandler(BaseAPIHandler,
             raise tornado.web.HTTPError(500, 'Facebook user '
                                              'profile access failed')
 
-        # self.write(user)
-        # self.finish()
         self.set_secure_cookie('user_name', user['name'])
         self.set_secure_cookie('email', user['email'])
         self.redirect(self.settings['default_redirect'])
@@ -108,9 +102,6 @@ class FacebookLoginHandler(BaseAPIHandler,
 
 
 #  Google auth
-
-class AuthError(Exception):
-    pass
 
 class GoogleLoginHandler(BaseAPIHandler, tornado.auth.GoogleOAuth2Mixin):
     @tornado.gen.coroutine
@@ -123,7 +114,7 @@ class GoogleLoginHandler(BaseAPIHandler, tornado.auth.GoogleOAuth2Mixin):
                 redirect_uri=uri,
                 code=self.get_argument('code'),
             )
-
+            # request for user profile (user_name, email)
             yield self.google_request(path='/me',
                             access_token=user['access_token'],
                             callback=self._save_user_profile)
@@ -155,16 +146,15 @@ class GoogleLoginHandler(BaseAPIHandler, tornado.auth.GoogleOAuth2Mixin):
         else:
             http.fetch(url, callback=callback)
 
-
     def _on_google_request(self, future, response):
         if response.error:
-            future.set_exception(AuthError("Erorr response %s fetching %s" %
+            future.set_exception(tornado.auth.AuthError("Erorr response %s fetching %s" %
                                            (response.error, response.request.url)))
             return
 
         future.set_result(tornado.escape.json_decode(response.body))
 
-
+    # set secure cookie with user_name and email
     def _save_user_profile(self, user):
         if not user:
             raise tornado.web.HTTPError(500, 'Google user '
