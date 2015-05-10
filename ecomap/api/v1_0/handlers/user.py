@@ -3,11 +3,12 @@ import tornado.web
 import tornado.escape
 
 from api.v1_0.handlers.base import BaseAPIHandler
-from api.v1_0.models.user import User
+from api.v1_0.handlers.permission import have_access
 
 
 class UserAPIHandler(BaseAPIHandler):
 
+    @have_access('create')
     @tornado.web.authenticated
     def get(self):
         email = self.get_secure_cookie('email')
@@ -21,6 +22,6 @@ class UserAPIHandler(BaseAPIHandler):
     def delete(self):
         return self.write({'user': 'delete'})
 
-    @tornado.web.authenticated
+
     def put(self, user):
         return self.write({'user': 'put'})

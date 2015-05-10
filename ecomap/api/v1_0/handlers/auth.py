@@ -104,6 +104,7 @@ class FacebookLoginHandler(BaseAPIHandler,
 #  Google auth
 
 class GoogleLoginHandler(BaseAPIHandler, tornado.auth.GoogleOAuth2Mixin):
+
     @tornado.gen.coroutine
     def get(self):
         uri = 'http://{}:{}/auth/login/google'\

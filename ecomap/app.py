@@ -9,7 +9,6 @@ from tornado.ioloop import IOLoop
 from api.utils.db import get_db_session
 from api.v1_0.urls.urls import UrlsTable
 
-
 if __name__ == "__main__":
 
     with open('settings.json') as json_settings:

@@ -10,6 +10,7 @@ __all__ = [
 ]
 
 import os
+import json
 
 from fabric.utils import puts
 from fabric.contrib.console import confirm
